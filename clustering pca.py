@@ -21,13 +21,13 @@ def reset_proses():
     st.session_state.mulai_proses = False
 
 # ==========================================
-# 2. CSS STYLING: PUTIH, 3D, BERTEKSTUR & ELEGAN
+# 2. CSS STYLING: PUTIH, 3D, BERTEKSTUR & RESPONSIF HP
 # ==========================================
 st.markdown("""
     <style>
         /* 1. Latar Belakang Utama (Putih Bersih) */
         .stApp { 
-            background: #f8fafc; /* Sedikit abu-abu sangat muda agar kartu putih terlihat melayang */
+            background: #f8fafc; 
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             color: #1e293b;
         }
@@ -40,7 +40,6 @@ st.markdown("""
             box-shadow: 0 15px 35px rgba(16, 185, 129, 0.25);
             margin-bottom: 30px; position: relative; overflow: hidden;
         }
-        /* Dekorasi Lingkaran Abstrak di Banner */
         .hero-banner::before {
             content: ''; position: absolute; top: -50%; right: -5%;
             width: 300px; height: 300px; background: rgba(255,255,255,0.1);
@@ -82,33 +81,24 @@ st.markdown("""
             margin-bottom: 25px !important; display: flex; align-items: center; gap: 10px;
         }
         
-        /* 6. Kotak Keterangan Metode (Bertekstur dengan Watermark) */
+        /* 6. Kotak Keterangan Metode */
         .metode-info {
             background: linear-gradient(135deg, #f0fdf4 0%, #d1fae5 100%); 
             border-left: 5px solid #10b981; padding: 18px 22px;
             border-radius: 12px; font-size: 14px; color: #064e3b; margin-top: 15px;
             box-shadow: 0 4px 15px rgba(16, 185, 129, 0.1); line-height: 1.7;
-            position: relative; overflow: hidden;
-        }
-        .metode-info::after {
-            content: '⚙️'; position: absolute; right: -15px; bottom: -25px;
-            font-size: 90px; opacity: 0.07; transform: rotate(-15deg);
         }
         
-        /* 7. Kotak PCA (Mewah & Dinamis) */
+        /* 7. Kotak PCA */
         .pca-box {
             background: linear-gradient(135deg, #064e3b 0%, #022c22 100%); color: white; 
             padding: 22px 25px; border-radius: 14px; font-size: 14.5px; 
             box-shadow: 0 10px 25px rgba(6, 78, 59, 0.25); margin-top: 10px; line-height: 1.7;
             position: relative; overflow: hidden; border: 1px solid #34d399;
         }
-        .pca-box::after {
-            content: '✨'; position: absolute; right: 10px; top: 10px;
-            font-size: 60px; opacity: 0.1;
-        }
         .pca-box b { color: #6ee7b7; font-size: 15.5px; }
 
-        /* 8. Kotak Anggota Klaster (Warna-warni Cerah) */
+        /* 8. Kotak Anggota Klaster */
         .cluster-box {
             background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); color: #334155;
             border-radius: 14px; padding: 20px; margin-bottom: 20px;
@@ -120,7 +110,7 @@ st.markdown("""
             border-bottom: 2px dashed #bae6fd; padding-bottom: 8px;
         }
 
-        /* 9. Gaya Interpretasi per Variabel (Desain Kartu Timbul) */
+        /* 9. Gaya Interpretasi per Variabel */
         .var-card {
             background: #ffffff; border-radius: 12px; padding: 20px; margin-bottom: 18px; 
             box-shadow: 0 4px 20px rgba(0,0,0,0.06); border: 1px solid #f1f5f9;
@@ -136,13 +126,20 @@ st.markdown("""
         }
         .var-desc { font-size: 14.5px; color: #475569; line-height: 1.7; margin:0;}
         .var-desc b { color: #0f172a; font-weight: 800; }
+
+        /* Responsive Mobile CSS */
+        @media (max-width: 768px) {
+            .hero-banner { padding: 25px 20px; }
+            .hero-banner h1 { font-size: 24px; }
+            .block-container { padding-top: 1rem; padding-bottom: 3rem; }
+        }
         
         #MainMenu {visibility: hidden;} footer {visibility: hidden;} header {visibility: hidden;}
     </style>
 """, unsafe_allow_html=True)
 
 # ==========================================
-# 3. HEADER & BANNER (Info Euclidean Dipindah ke Sini)
+# 3. HEADER & BANNER
 # ==========================================
 st.markdown("""
     <div class="hero-banner">
@@ -152,7 +149,25 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ==========================================
-# 4. KONTROL & UPLOAD
+# 4. PANDUAN FORMAT DATA (DENGAN CONTOH X1, X2, X3)
+# ==========================================
+with st.expander("📖 Panduan & Contoh Format Dataset (Klik untuk Buka/Tutup)", expanded=False):
+    st.write("Pastikan file **.CSV** atau **.XLSX** Anda disusun dengan ketentuan berikut:")
+    st.markdown("""
+    - **Kolom Pertama:** Berisi label identitas wilayah/objek (contoh: Nama Provinsi atau Kabupaten).
+    - **Kolom Selanjutnya:** Berisi variabel/indikator numerik (misal disimbolkan $X_1, X_2, X_3$, dst. atau menggunakan nama asli indikator Anda) untuk proses perhitungan klaster.
+    """)
+    st.markdown("**Contoh Struktur Tabel Data yang Valid:**")
+    df_contoh = pd.DataFrame({
+        "Wilayah": ["Aceh", "Sumatera Utara", "Sumatera Barat"],
+        "X1": [305, 408, 196],
+        "X2": [616, 232, 225],
+        "X3": [4702, 26424, 6136]
+    })
+    st.table(df_contoh)
+
+# ==========================================
+# 5. KONTROL & UPLOAD DATASET
 # ==========================================
 uploaded_file = st.file_uploader("📂 Unggah Dataset (.CSV / .XLSX)", type=['csv', 'xlsx'], on_change=reset_proses)
 
@@ -184,7 +199,6 @@ if uploaded_file is not None:
             }
             metode_linkage = st.selectbox("Algoritma pautan (Linkage):", options=list(pilihan_metode.keys()), format_func=lambda x: pilihan_metode[x], on_change=reset_proses)
             
-            # KETERANGAN METODE DENGAN DESAIN WATERMARK
             keterangan = {
                 "single": "Mendefinisikan jarak klaster berdasarkan titik observasi terdekat. Rentan terhadap fenomena efek rantai <i>(chaining effect)</i> memanjang.",
                 "complete": "Menghitung kedekatan berdasarkan titik observasi terjauh. Cenderung menghasilkan struktur klaster yang cembung dan sangat padat.",
@@ -203,7 +217,7 @@ if uploaded_file is not None:
             st.dataframe(df, width='stretch', height=400)
         
     # ==========================================
-    # 5. ALUR ANALISIS INTERAKTIF
+    # 6. ALUR ANALISIS INTERAKTIF
     # ==========================================
     if st.session_state.mulai_proses:
         if len(fitur_terpilih) < 2:
@@ -298,24 +312,24 @@ if uploaded_file is not None:
                 st.subheader("⚙️ 6. Distribusi Anggota Klaster")
                 jumlah_klaster_user = st.slider("Tentukan parameter jumlah klaster (K) yang akan dibentuk:", min_value=2, max_value=6, value=3)
                 
-            model_final = AgglomerativeClustering(n_clusters=jumlah_klaster_user, linkage=metode_linkage)
-            df['Klaster_Final'] = model_final.fit_predict(X_clustering)
-            
-            with st.container(border=True):
+                model_final = AgglomerativeClustering(n_clusters=jumlah_klaster_user, linkage=metode_linkage)
+                df['Klaster_Final'] = model_final.fit_predict(X_clustering)
                 
-                kolom_teks = df.select_dtypes(include=['object', 'string']).columns.tolist()
-                kolom_label = kolom_teks[0] if kolom_teks else df.columns[0]
-                
-                kolom_klaster_ui = st.columns(2)
-                for i in range(jumlah_klaster_user):
-                    anggota = df[df['Klaster_Final'] == i][kolom_label].tolist()
-                    teks_anggota = ", ".join(str(x) for x in anggota)
-                    kolom_klaster_ui[i % 2].markdown(f"""
-                        <div class="cluster-box">
-                            <b>🔵 KLASTER {i} (n = {len(anggota)})</b>
-                            {teks_anggota}
-                        </div>
-                    """, unsafe_allow_html=True)
+                with st.container(border=True):
+                    
+                    kolom_teks = df.select_dtypes(include=['object', 'string']).columns.tolist()
+                    kolom_label = kolom_teks[0] if kolom_teks else df.columns[0]
+                    
+                    kolom_klaster_ui = st.columns(2)
+                    for i in range(jumlah_klaster_user):
+                        anggota = df[df['Klaster_Final'] == i][kolom_label].tolist()
+                        teks_anggota = ", ".join(str(x) for x in anggota)
+                        kolom_klaster_ui[i % 2].markdown(f"""
+                            <div class="cluster-box">
+                                <b>🔵 KLASTER {i} (n = {len(anggota)})</b>
+                                {teks_anggota}
+                            </div>
+                        """, unsafe_allow_html=True)
 
             st.markdown("---")
             col_tabel, col_interpretasi = st.columns([1, 1.2], gap="large")
